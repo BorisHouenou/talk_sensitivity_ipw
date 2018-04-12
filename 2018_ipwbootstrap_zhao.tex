@@ -144,6 +144,7 @@
   \item The goal of a sensitivity analysis is to gauge the degree to which a
     statistical inference is incorrect under violations of the NUC assumption.
     \begin{itemize}
+      \itemsep6pt
       \item To what extent could the existence of potentially unmeasured
         confounders invalidate our findings?
       \item ...
@@ -164,6 +165,7 @@
     \]
     for $a \in \{0, 1\}$.
     \begin{itemize}
+      \itemsep6pt
       \item $e_a(x,y)$ --- ``complete data'' selection probability.
       \item $e_a(x)$ --- ``observed data'' selection probability.
     \end{itemize}
@@ -175,7 +177,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methodology}
-\subsection{Sensitivity Parameter and Analysis}
+\subsection{Sensitivity: Parameter, Analysis, Inference}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Sensitivity Parameter}
@@ -220,7 +222,43 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Sensitivity Parameter}
+\begin{frame}{Parametric Models in Sensitivity Analysis}
+
+\begin{itemize}
+  \itemsep12pt
+  \item Ideally, $e_0(x)$ would be estimated nonparametrically, but, in many
+    cases, we restrict ourselves to parametric models:
+    \[
+    \begin{aligned}
+      e_{\beta_0}(x) =& \argmin_{\beta \in \Theta} \text{KL}(\pr_0(A = 1 \mid
+      \bm{X} = x) \Vert \pr_{\beta}(A = 1 \mid \bm{X} = x))\\
+      =& \argmax_{\beta \in \Theta} \E_0[A \cdot \text{log}e_{\beta}(X) +
+      (1 - A) \cdot \text{log}(1 - e_{\beta}(x)) \mid \bm{X} = x]
+    \end{aligned}
+    \]
+  \item As before, now have $e_0(x,y) \in \mathcal{E}_{\beta_0}(\Lambda)$, where
+    \[\mathcal{E}_{\beta_0}(\Lambda) \coloneqq \left\{e(x,y): \frac{1}{\Lambda}
+      \leq \text{OR}(e(x,y), e_{\beta_0}(x,y)) \leq \Lambda, x \in \mathcal{X},
+      y \in \R \right\} \]
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Confidence Intervals in Sensitivity Analysis}
+
+\begin{itemize}
+  \itemsep12pt
+  \item ...
+  \item ...
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Confidence Intervals in Sensitivity Analysis}
 
 \begin{itemize}
   \itemsep12pt
