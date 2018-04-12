@@ -222,7 +222,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Parametric Models in Sensitivity Analysis}
+\begin{frame}{Parametric Model for Sensitivity Analysis}
 
 \begin{itemize}
   \itemsep12pt
@@ -242,17 +242,13 @@
       y \in \R \right\} \]
 \end{itemize}
 
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Confidence Intervals in Sensitivity Analysis}
-
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
+\note{
+  This parametric setup broadens the definition of sensitivity analysis:
+  \begin{itemize}
+    \item Model misspecification: $e_{\beta_0}(x) \neq e_0(x)$
+    \item No unmeasured confouding: $e_0(x) \neq e_0(x,y)$
+  \end{itemize}
+}
 
 \end{frame}
 
@@ -262,8 +258,11 @@
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
+  \item ($1 - \alpha$)--CI: $\pr_0(\Delta \in [\text{L}, \text{U}]) \geq 1 -
+    \alpha$ is true for any $F_0$ s.t.~$h_0 \in \mathcal{H}(\lambda)$, a
+    collection of sensitivity models.
+  \item Asymptotic ($1 - \alpha$)--CI if $\liminf\limits_{n \rightarrow \infty}
+    \pr_0(\Delta \in [\text{L}, \text{U}]) \geq 1 - \alpha$
 \end{itemize}
 
 \end{frame}
@@ -272,35 +271,48 @@
 \subsection{Inverse Probability Weighting Estimators}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{IPW Estimators}
+\begin{frame}{IPW Point Estimates}
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
+  \item Note that the ATE may be expressed $\hat{\Delta}^{(h_0, h_1)} \coloneqq
+    \hat{\mu}^{(h_1)}(1) - \hat{\mu}^{h_0}(0)$ for $h_0, h_1 \in
+    \mathcal{H}(\lambda)$.
+  \item Recall that the IPW estimator for a the mean $\mu$ in a missing data
+    problem may be expressed:
+    \[
+      \hat{\mu}^{(h)}_{\text{IPW}} = \frac{1}{n} \sum_{i = 1}^n \frac{A_i
+      Y_i}{\hat{e}^(h)(\bm{X_i}, Y_i)}
+    \]
+  \item The \textit{stabilized} IPW (SIPW) estimator is often used instead
+    \[
+      \hat{\mu}^{(h)}_{\text{SIPW}} = \left[\frac{1}{n} \sum_{i = 1}^n
+      \frac{A_i}{\hat{e}^(h)(\bm{X_i}, Y_i)}\right]^{-1} \left[\frac{1}{n}
+      \sum_{i = 1}^n \frac{A_iY_i}{\hat{e}^(h)(\bm{X_i}, Y_i)}\right]
+    \]
 \end{itemize}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{IPW Estimators}
+\begin{frame}{Interval Construction for SIPW Estimators}
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{IPW Estimators}
-
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
+  \item \textbf{Problem:} need to estimate variance computationally (e.g., via
+    bootstrap) while considering all violations of NUC in
+    $\mathcal{H}(\lambda)$.
+  \item Given ($1-\alpha$)--CIs for all $h \in \mathcal{H}(\lambda)$:
+    \[
+      \liminf\limits_{n \rightarrow \infty} \pr_0(\mu^{(h)} \in [L^{(h)},
+      U^{(h)}]) \geq 1 - \alpha
+    \]
+  \item Then, we have that the following is an asymptotic ($1-\alpha$)--CI under
+    the collection of sensitivity models $\mathcal{H}(\lambda)$:
+    \[
+      L = \inf_{h \in \mathcal{H}(\lambda)}L^{(h)}, U = \sup_{h \in
+        \mathcal{H}(\lambda)}U^{(h)}
+    \]
 \end{itemize}
 
 \end{frame}
@@ -313,8 +325,20 @@
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
+  \item Finally, the centerpiece! But first, we need still more notation.
+  \item Let $\pr_n$ be the empirical measure on the sample $\bm{T_1}, \ldots,
+    \bm{T_n}$, where $\bm{T_i} = (A_i, \bm{X'_{i}}, A_i Y_i)$.
+  \item Further, let $\bm{\hat{T_1}}, \ldots, \bm{\hat{T_n}}$ be
+    i.i.d.~re-samples from $\pr_n$.
+  \item Then, the SIPW estimate $\hat{\hat{\mu}}^{(h)}$ may be computed over the
+    bootstrap re-samples $\{\bm{\hat{T_i}}\}_{i \in [n]}$.
+  \item Now, for $h \in \mathcal{H}(\lambda)$, percentile bootstrap CI:
+    \[
+      [L^{(h)}, U^{(h)}] = \left[Q_{\frac{\alpha}{2}}(\hat{\hat{\mu}}^{(h)}),
+      Q_{1 - \frac{\alpha}{2}}(\hat{\hat{\mu}}^{(h)})\right],
+    \]
+    where $Q_{\alpha}(\hat{\hat{\mu}}) \coloneqq \inf\{t:
+    \hat{\pr}_n(\hat{\hat{\mu}} \leq t) \geq \alpha\}$
 \end{itemize}
 
 \end{frame}
@@ -324,58 +348,66 @@
 \begin{frame}{Percentile Bootstrap}
 
 \begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
+  \itemsep8pt
+  \item The percentile bootstrap interval $[L^{(h)}, U^{(h)}]$ is an
+    asymptotically valid CI of the target estimate for the parametric
+    sensitivity model $e^{(h)} \in \mathcal{E}_{\beta_0}(\Lambda)$.
+  \item The bootstrap is not valid if the missingness probability is modeled
+    nonparametrically (Abadie \& Imbens, 2008).
+  \item Percentile bootstrap CI under collection of sensitivity models:
+    \[
+      [L, U] = \left[\left(Q_{\frac{\alpha}{2}}(\inf_{h \in
+        \mathcal{H}(\lambda)} \hat{\hat{\mu}}^{(h)})\right), \left(Q_{1 -
+        \frac{\alpha}{2}}(\sup_{h \in \mathcal{H}(\lambda)}
+        \hat{\hat{\mu}}^{(h)})\right)\right]
+    \]
+    \begin{itemize}
+      \item \small Since infimum/supremum is inside the quantile function, the
+        problem is efficiently solved by linear programming.
+      \item \small Exchange of quantile and infimum/supremum is justified by a
+        generalized (von Neumann's) minimax/maximin inequality.
+    \end{itemize}
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Percentile Bootstrap}
+\begin{frame}{Linear Fractional Programming of SIPW Point Estimates}
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
-
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{IPW Sensitivity with Percentile Bootstrap}
-
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{IPW Sensitivity with Percentile Bootstrap}
-
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
+  \item Bootstrap Intervals of the range of SIPW point estimates:
+    \[
+      [L_B, U_B] = \left[\left(Q_{\frac{\alpha}{2}}(\inf_{h \in
+        \mathcal{H}(\lambda)} \hat{\hat{\mu}}^{(h)})_{b \in [B]}\right),
+        \left(Q_{1 - \frac{\alpha}{2}}(\sup_{h \in \mathcal{H}(\lambda)}
+        \hat{\hat{\mu}}^{(h)})_{b \in [B]}\right)\right]
+    \]
+  \item In the linear programming problem, the optimization variable is merely
+    $z_i = e^{h(\bm{X}_i, Y_i)}$, as all other relevant quantities may be
+    readily estimated from the observed data.
+  \item Computation is extremely efficient, with complexity $O(nB + n
+    \text{log}n)$.
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{IPW Sensitivity with Percentile Bootstrap}
+\begin{frame}{CI for the ATE in the Sensitivity Model}
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
+  \item Using the approach we've been discussing, we readily obtain an
+    asymptotically valid CI for the ATE via the percentile bootstrap:
+    \[
+      \left[Q_{\frac{\alpha}{2}}(\hat{\hat{\Delta}}^{(h_0, h_1)}),
+      Q_{1 - \frac{\alpha}{2}}(\hat{\hat{\Delta}}^{(h_0, h_1)})\right],
+    \]
+    where $Q_{\frac{\alpha}{2}}(\hat{\hat{\Delta}}^{(h_0, h_1)})$ is the
+    $\alpha$-th bootstrap quantile of the SIPW estimates.
+  \item From this, we obtain CIs 
 \end{itemize}
 
 \end{frame}
@@ -386,26 +418,21 @@
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
+  \item AIPW estimators are \textit{``double robust''}, incorporating an extra
+    nuisance parameter: $f_0(\bm{x}) = \E_0[Y \mid A = 1, \bm{X} = \bm{x}]$.
+  \item The AIPW estimator $\hat{\Delta}_{\text{AIPW}}$ is consistent for
+    $\Delta$ as long as one of $\hat{e}(\bm{x})$ and $\hat{f}(\bm{x})$ is
+    consistent.
+  \item \textbf{Limitation:} In order to compute asymptotically valid confidence
+    intervals, the outcome regression model $\hat{f}(\bm{X}_i)$ must be
+    parametric.\\ \pause
+    \small{\textit{Perhaps this could be loosened.}}
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Extensions: Lipschitz Bounds in the Sensitivity Model}
-
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusions}
+\section{Discussion}
 \subsection{Comparisons}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -413,8 +440,18 @@
 
 \begin{itemize}
   \itemsep12pt
-  \item ...
-  \item ...
+  \item Rosenbaum's method obtains point estimates and CIs under the collection
+    of models $\mathcal{R}(\Gamma)$.
+    \begin{itemize}
+      \itemsep8pt
+      \item Here, classically, we assume that the causal effect is additive and
+        constant.
+      \item This means the Fisher null can be used to determine whether an
+        effect $\Delta$ ought to be included in the ($1-\alpha$)--CI.
+    \end{itemize}
+  \item The present approach is a hybrid of existing approaches in the sense
+    that it considers a range of differencs between $A\mid\bm{X}$ and
+    $A\mid\bm{X}, Y(a)$.
 \end{itemize}
 
 \end{frame}
@@ -424,36 +461,36 @@
 \begin{frame}{Comparison with Rosenbaum Sensitivity}
 
 \begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
+  \itemsep8pt
+  \item Generally, Rosenbaum's method treats the sample as the population, the
+    present approach treats the observations as i.i.d.~samples from a
+    super-population.
+  \item The present method uses IPW-type estimators --- importantly, this makes
+    exact matching completely unnecessary.
+  \item The present approach is natural for IPW-type estimators while
+    Rosenbaum's is natural for matched designs.
+  \item Most methods use randomization inference based on Fisher's sharp null,
+    the present approach takes a point estimation perspective.
+  \item Heterogeneous treatment effects; applicability to missing data problems.
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Review}
+\subsection{Remarks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Review}
+\begin{frame}{Thoughts and Impressions}
 
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
+  \Large What do I think?
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Review}
+\begin{frame}{I've Talked Enough}
 
-\begin{itemize}
-  \itemsep12pt
-  \item ...
-  \item ...
-\end{itemize}
+  \Large What you think?
 
 \end{frame}
 
